@@ -1,0 +1,113 @@
+.loader {
+  margin: 5rem;
+}
+
+.overlay-loader {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  // z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__bg {
+    position: fixed;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    opacity: 1;
+    background: var(--overlay-loader-bg);
+  }
+}
+
+.push-pop {
+  --duration: .85;
+  height: 5rem;
+  width: 5rem;
+  position: relative;
+  overflow: hidden;
+
+  // Use the first div for shifting the block from side to side
+  & > div:nth-of-type(1) {
+    height: 1rem;
+    width: 1rem;
+    position: absolute;
+    animation: push-pop-slide calc(var(--duration) * 1s) infinite alternate ease-in-out;
+    transform: translate(0, -100%);
+    top: 100%;
+    left: 0;
+
+    &:after {
+      animation: push-pop-flip calc(var(--duration) * 1s) infinite alternate ease-in-out;
+      background: var(--overlay-loader-item);
+      content: '';
+      height: 100%;
+      position: absolute;
+      width: 100%;
+    }
+  }
+
+  // Use the second for the staionary pillar
+  & > div:nth-of-type(2) {
+    background: var(--overlay-loader-item);
+    height: 1.5rem;
+    left: 50%;
+    position: absolute;
+    top: 100%;
+    transform: translate(-50%, -100%);
+    width: 1rem;
+  }
+
+  // Use the pseudo elements for the shifting pillars
+  &:after,
+  &:before {
+    animation: push-pop-pushed calc(var(--duration) * 1s) alternate infinite ease;
+    background: var(--overlay-loader-item);
+    bottom: 0;
+    content: '';
+    height: 2rem;
+    position: absolute;
+    width: 1rem;
+  }
+
+  &:before {
+    animation: push-pop-pushed calc(var(--duration) * 1s) alternate-reverse infinite ease;
+    left: 0;
+  }
+
+  &:after {
+    right: 0;
+  }
+}
+
+@keyframes push-pop-pushed {
+  0%, 72.5% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(0, 100%);
+  }
+}
+
+@keyframes push-pop-flip {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(0, -4rem) rotate(90deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(180deg);
+  }
+}
+
+@keyframes push-pop-slide {
+  to {
+    transform: translate(0, -100%) translate(4rem, 0);
+  }
+}
