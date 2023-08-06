@@ -45,8 +45,10 @@
     ]
   },
   "devDependencies": {
+    "@webosose/ares-cli": "^2.4.0",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.27",
+    "prettier": "^3.0.1",
     "sass": "^1.64.2"
   }
 }

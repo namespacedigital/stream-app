@@ -1,3 +1,18 @@
+import { isMenuOpen } from '../../../infrastructure/menu';
+import { useAtom } from '../../../infrastructure/state/jotai';
+import './movie.scss'
+
 export default function MoviePage() {
-  return <div className='w-screen h-screen flex justify-center items-center text-white'>Movie</div>;
+  const [isMenuOpenState, setIsMenuOpenState] = useAtom(isMenuOpen);
+
+  const handleMenu = () => {
+    setIsMenuOpenState(!isMenuOpenState);
+  };
+  return (
+    <div className='movie'>
+      <button className='movie__content' type='button' onClick={handleMenu}>
+        Filme
+      </button>
+    </div>
+  );
 }

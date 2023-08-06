@@ -1,0 +1,27 @@
+.nav {
+  display: flex;
+  height: 100%;
+  font-size: 9px;
+  &__item {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    width: 6rem;
+    transition: all 0.25s ease-out;
+    fill:var(--red-700);
+    cursor: pointer;
+
+    &__icon {
+      width: 2rem;
+      height: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    &:hover {
+      background:  var(--default-green);
+      color: white;
+      fill: white;
+    }
+  }
+}
