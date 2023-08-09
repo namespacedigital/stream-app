@@ -1,18 +1,48 @@
-import { isMenuOpen } from '../../../infrastructure/menu';
-import { useAtom } from '../../../infrastructure/state/jotai';
-import './movie.scss'
+import './movie.scss';
+import { VideoPlayer } from '../../components/specific/player/VideoPlayer';
+import { useRef } from 'react';
+import videojs from 'video.js';
 
 export default function MoviePage() {
-  const [isMenuOpenState, setIsMenuOpenState] = useAtom(isMenuOpen);
+  const playerRef = useRef<any>(null);
 
-  const handleMenu = () => {
-    setIsMenuOpenState(!isMenuOpenState);
+  const videoJsOptions = {
+    autoplay: true,
+    controls: true,
+    responsive: true,
+    fluid: true,
+    controlBar: {
+      fullscreenToggle: false,
+      pictureInPictureToggle: false,
+    },
+    sources: [
+      {
+        src: 'http://localhost:3333/',
+        type: 'video/mp4',
+      },
+    ],
   };
+
+  const handlePlayerReady = (player: any) => {
+    playerRef.current = player;
+
+    player.tech_.off('dblclick');
+
+    // You can handle player events here, for example:
+    player.on('waiting', () => {
+      videojs.log('player is waiting');
+    });
+
+    player.on('dispose', () => {
+      videojs.log('player will dispose');
+    });
+  };
+
   return (
     <div className='movie'>
-      <button className='movie__content' type='button' onClick={handleMenu}>
-        Filme
-      </button>
+      <div className='movie__content'>
+        <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
+      </div>
     </div>
   );
 }

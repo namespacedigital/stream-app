@@ -5,6 +5,7 @@
     justify-content: center;
     &__dropdown {
         position: absolute;
+        z-index: 10;
         height: 6rem;
         top: -3rem;
         min-width: 80%;
