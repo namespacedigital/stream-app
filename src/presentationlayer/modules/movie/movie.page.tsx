@@ -17,7 +17,7 @@ export default function MoviePage() {
     },
     sources: [
       {
-        src: 'http://localhost:3333/',
+        src: 'http://192.168.1.138:8080/stream/test.mkv',
         type: 'video/mp4',
       },
     ],
