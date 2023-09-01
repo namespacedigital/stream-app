@@ -3,7 +3,7 @@ import Actions from '../../specific/actions/actions';
 import Nav from '../../specific/nav/nav';
 import classNames from 'classnames';
 import { useAtomValue } from '../../../../infrastructure/state/jotai';
-import { isMenuOpen } from '../../../../infrastructure/menu';
+import { isMenuOpen } from '../../../../infrastructure/state/menu';
 import './header.scss';
 
 export default function Header() {

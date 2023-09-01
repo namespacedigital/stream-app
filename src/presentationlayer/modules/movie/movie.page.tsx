@@ -2,9 +2,13 @@ import './movie.scss';
 import { VideoPlayer } from '../../components/specific/player/VideoPlayer';
 import { useRef } from 'react';
 import videojs from 'video.js';
+import { APIS } from '../../../infrastructure/state/config';
+import { useAtom, useSetAtom } from '../../../infrastructure/state/jotai';
+import { isMenuOpen } from '../../../infrastructure/state/menu';
 
 export default function MoviePage() {
   const playerRef = useRef<any>(null);
+  const setIsMenuOpen = useSetAtom(isMenuOpen);
 
   const videoJsOptions = {
     autoplay: true,
@@ -17,7 +21,7 @@ export default function MoviePage() {
     },
     sources: [
       {
-        src: 'http://192.168.1.138:8080/stream/test.mkv',
+        src: APIS.API_URL + `/movies/${'test.mkv'}`,
         type: 'video/mp4',
       },
     ],
@@ -33,9 +37,22 @@ export default function MoviePage() {
       videojs.log('player is waiting');
     });
 
-    player.on('dispose', () => {
-      videojs.log('player will dispose');
+    player.on('pause', () => {
+      setIsMenuOpen(true);
+      videojs.log('player is paused');
     });
+
+    player.on('play', () => {
+      setIsMenuOpen(false);
+      videojs.log('player is playing');
+    });
+
+    // player.on('play', () => {
+    //   setTimeout(() => {
+    //     setIsMenuOpenState(false);
+    //   }, 3000);
+    //   videojs.log('player will dispose');
+    // });
   };
 
   return (

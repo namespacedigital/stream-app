@@ -1,10 +1,10 @@
-import { atom } from "../state/jotai";
+import { atom } from '../jotai';
 
 export enum ModuleEnum {
-    IPTV,
-    MOVIE
-  }
+  IPTV,
+  MOVIE,
+}
 
 const moduleComponent = atom<ModuleEnum>(ModuleEnum.IPTV);
 
-export {moduleComponent}
+export { moduleComponent };
