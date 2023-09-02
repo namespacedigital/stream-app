@@ -47,3 +47,6 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 Resource:
 https://www.svgviewer.dev/s/208265/logo
+
+LG:
+https://github.com/webOS-TV-app-samples/

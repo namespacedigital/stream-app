@@ -1,28 +1,29 @@
-import { isMenuOpen } from '../../../infrastructure/state/menu';
-import { useAtom, useSetAtom } from '../../../infrastructure/state/jotai';
+import { useAtom } from '../../../infrastructure/state/jotai';
 import './iptv.scss';
 import { useRef } from 'react';
 import { APIS } from '../../../infrastructure/state/config';
 import videojs from 'video.js';
 import { VideoPlayer } from '../../components/specific/player/VideoPlayer';
+import { useChangeTvProgramHook } from './components/hook/change-tv-program.hook';
+import { tvProgram } from '../../../infrastructure/state/iptv';
+import { TvProgram } from '../../../domain/iptv/tv-program/TvProgram';
+import { CurrentTvProgram } from './components/current-program/current-tv-program';
 
 export default function IptvPage() {
-  const [isMenuOpenState, setIsMenuOpenState] = useAtom(isMenuOpen);
   const playerRef = useRef<any>(null);
-  const setIsMenuOpen = useSetAtom(isMenuOpen);
-
+  const [tvProgramState] = useAtom<TvProgram>(tvProgram);
+  useChangeTvProgramHook();
+  videojs.log(`tv program: ${tvProgramState}`);
   const videoJsOptions = {
     autoplay: true,
-    controls: true,
+    controls: false,
     responsive: true,
     fluid: true,
-    controlBar: {
-      fullscreenToggle: false,
-      pictureInPictureToggle: false,
-    },
+    controlBar: false,
     sources: [
       {
         src: APIS.API_URL + `/udp.mkv`,
+        // src: APIS.API_URL + `/movies/test.mkv`,
         type: 'video/mp4',
       },
     ],
@@ -35,16 +36,19 @@ export default function IptvPage() {
 
     // You can handle player events here, for example:
     player.on('waiting', () => {
+      // const interval = setInterval(() => videojs.log('player is waiting'), 1000);
       videojs.log('player is waiting');
     });
 
     player.on('pause', () => {
-      setIsMenuOpen(true);
       videojs.log('player is paused');
     });
 
+    player.on('error', () => {
+      videojs.log('player has error');
+    });
+
     player.on('play', () => {
-      setIsMenuOpen(false);
       videojs.log('player is playing');
     });
 
@@ -55,14 +59,13 @@ export default function IptvPage() {
     //   videojs.log('player will dispose');
     // });
   };
-  const handleMenu = () => {
-    setIsMenuOpenState(!isMenuOpenState);
-  };
+
   return (
-    <div className='movie'>
-      <div className='movie__content'>
+    <div className='iptv' onClick={() => console.log()}>
+      <div className='iptv__content'>
         <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
       </div>
+      <CurrentTvProgram />
     </div>
   );
 }

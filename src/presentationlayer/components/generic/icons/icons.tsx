@@ -9,3 +9,4 @@ export { ReactComponent as AddIcon } from './../../../assets/icons/add.svg';
 export { ReactComponent as FilterIcon } from './../../../assets/icons/filter.svg';
 export { ReactComponent as FilmIcon } from './../../../assets/icons/film.svg';
 export { ReactComponent as TvIcon } from './../../../assets/icons/tv-retro.svg';
+export { ReactComponent as CloseIcon } from './../../../assets/icons/xmark.svg';

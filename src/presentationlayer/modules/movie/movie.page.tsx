@@ -3,12 +3,12 @@ import { VideoPlayer } from '../../components/specific/player/VideoPlayer';
 import { useRef } from 'react';
 import videojs from 'video.js';
 import { APIS } from '../../../infrastructure/state/config';
-import { useAtom, useSetAtom } from '../../../infrastructure/state/jotai';
-import { isMenuOpen } from '../../../infrastructure/state/menu';
+import { useSetAtom } from '../../../infrastructure/state/jotai';
+import { isTopMenuOpen } from '../../../infrastructure/state/menu';
 
 export default function MoviePage() {
   const playerRef = useRef<any>(null);
-  const setIsMenuOpen = useSetAtom(isMenuOpen);
+  const setIsMenuOpen = useSetAtom(isTopMenuOpen);
 
   const videoJsOptions = {
     autoplay: true,

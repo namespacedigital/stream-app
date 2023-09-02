@@ -1,0 +1,14 @@
+.current-tv-program {
+  &__description {
+    position: absolute;
+    width: 20rem;
+    height: 10rem;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    background:  var(--gray-900);
+  }
+}

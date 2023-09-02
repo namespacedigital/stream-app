@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+import { useSyncExternalStore } from 'react';
 
 interface Atom<AtomType> {
   get: () => AtomType;
@@ -7,15 +7,10 @@ interface Atom<AtomType> {
   _subscribers: () => number;
 }
 
-type AtomGetter<AtomType> = (
-  get: <Target>(a: Atom<Target>) => Target
-) => AtomType;
+type AtomGetter<AtomType> = (get: <Target>(a: Atom<Target>) => Target) => AtomType;
 
-export function atom<AtomType>(
-  initialValue: AtomType | AtomGetter<AtomType>
-): Atom<AtomType> {
-  let value: AtomType =
-    typeof initialValue === "function" ? (null as AtomType) : initialValue;
+export function atom<AtomType>(initialValue: AtomType | AtomGetter<AtomType>): Atom<AtomType> {
+  let value: AtomType = typeof initialValue === 'function' ? (null as AtomType) : initialValue;
 
   const subscribers = new Set<(newValue: AtomType) => void>();
   const subscribed = new Set<Atom<any>>();
@@ -32,16 +27,13 @@ export function atom<AtomType>(
         computeValue();
       });
     }
-    
+
     return currentValue;
   }
 
   async function computeValue() {
-    const newValue =
-      typeof initialValue === "function"
-        ? (initialValue as AtomGetter<AtomType>)(get)
-        : value;
-    value = (null as AtomType);
+    const newValue = typeof initialValue === 'function' ? (initialValue as AtomGetter<AtomType>)(get) : value;
+    value = null as AtomType;
     value = await newValue;
     subscribers.forEach((callback) => callback(value));
   }
@@ -54,7 +46,7 @@ export function atom<AtomType>(
       value = newValue;
       computeValue();
     },
-        subscribe: (callback) => {
+    subscribe: (callback) => {
       subscribers.add(callback);
       return () => {
         subscribers.delete(callback);
@@ -64,7 +56,7 @@ export function atom<AtomType>(
   };
 }
 
-export function useAtom<AtomType>(atom: Atom<AtomType>):[any, any] {
+export function useAtom<AtomType>(atom: Atom<AtomType>): [AtomType, any] {
   return [useSyncExternalStore(atom.subscribe, atom.get), atom.set];
 }
 
@@ -73,5 +65,5 @@ export function useAtomValue<AtomType>(atom: Atom<AtomType>) {
 }
 
 export function useSetAtom<AtomType>(atom: Atom<AtomType>) {
-    return atom.set;
-  }
+  return atom.set;
+}
