@@ -21,7 +21,7 @@ export default function MoviePage() {
     },
     sources: [
       {
-        src: APIS.API_URL + `/movies/${'test.mkv'}`,
+        src: APIS.API_URL + `/api/v1/movies/${'rick.mkv'}`,
         type: 'video/mp4',
       },
     ],

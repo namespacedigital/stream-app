@@ -1,19 +1,23 @@
-import { useAtom } from '../../../infrastructure/state/jotai';
+import { useSetAtom } from '../../../infrastructure/state/jotai';
 import './iptv.scss';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { APIS } from '../../../infrastructure/state/config';
 import videojs from 'video.js';
 import { VideoPlayer } from '../../components/specific/player/VideoPlayer';
 import { useChangeTvProgramHook } from './components/hook/change-tv-program.hook';
-import { tvProgram } from '../../../infrastructure/state/iptv';
-import { TvProgram } from '../../../domain/iptv/tv-program/TvProgram';
+import { selectedTvProgram } from '../../../infrastructure/state/iptv';
 import { CurrentTvProgram } from './components/current-program/current-tv-program';
+import { getTvPrograms } from '../../../application/service/iptv/tv-program/get-tv-programs';
 
 export default function IptvPage() {
   const playerRef = useRef<any>(null);
-  const [tvProgramState] = useAtom<TvProgram>(tvProgram);
-  useChangeTvProgramHook();
-  videojs.log(`tv program: ${tvProgramState}`);
+  const setSelectedTvProgram = useSetAtom(selectedTvProgram);
+
+  const [tvProgram, setTvPrograms] = useChangeTvProgramHook();
+
+  // console.log(tvProgram);
+
+  videojs.log(`tv program: ${tvProgram}`);
   const videoJsOptions = {
     autoplay: true,
     controls: false,
@@ -22,7 +26,7 @@ export default function IptvPage() {
     controlBar: false,
     sources: [
       {
-        src: APIS.API_URL + `/udp.mkv`,
+        src: APIS.API_URL + `/api/v1/iptv/${tvProgram.programName}`,
         // src: APIS.API_URL + `/movies/test.mkv`,
         type: 'video/mp4',
       },
@@ -59,6 +63,17 @@ export default function IptvPage() {
     //   videojs.log('player will dispose');
     // });
   };
+
+  useEffect(() => {
+    setSelectedTvProgram(tvProgram);
+  }, [setSelectedTvProgram, tvProgram]);
+
+  useEffect(() => {
+    getTvPrograms().then((result) => {
+      setTvPrograms(Object.keys(result));
+      // console.log(Object.keys(result));
+    });
+  }, [setTvPrograms]);
 
   return (
     <div className='iptv' onClick={() => console.log()}>

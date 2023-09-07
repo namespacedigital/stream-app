@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import './current-tv-program.scss';
 import { useAtom } from '../../../../../infrastructure/state/jotai';
 import { TvProgram } from '../../../../../domain/iptv/tv-program/TvProgram';
-import { tvProgram } from '../../../../../infrastructure/state/iptv';
+import { selectedTvProgram } from '../../../../../infrastructure/state/iptv';
 import useTimeout from '../../../../components/specific/hook/timeout.hook';
 
 export function CurrentTvProgram() {
-  const [tvProgramState] = useAtom<TvProgram>(tvProgram);
+  const [selectedTvProgramState] = useAtom<TvProgram>(selectedTvProgram);
   const [isTvProgramDescOpen, setIsTvProgramDescOpen] = useState(false);
 
   const [timeout] = useTimeout(() => {
@@ -16,9 +16,18 @@ export function CurrentTvProgram() {
   timeout();
 
   useEffect(() => {
-    if (tvProgramState.programName !== '') {
+    if (selectedTvProgramState && selectedTvProgramState.programName !== '') {
       setIsTvProgramDescOpen(true);
     }
-  }, [tvProgramState]);
-  return <>{isTvProgramDescOpen && <div className='current-tv-program__description'>{tvProgramState.programName}</div>}</>;
+  }, [selectedTvProgramState]);
+  return (
+    <>
+      {isTvProgramDescOpen && (
+        <div className='current-tv-program__description'>
+          <div>{selectedTvProgramState.programName}</div>
+          <div>{selectedTvProgramState.count}</div>
+        </div>
+      )}
+    </>
+  );
 }

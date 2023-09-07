@@ -1,6 +1,5 @@
-import { useCallback, useEffect } from 'react';
-import { useSetAtom } from '../../../../../infrastructure/state/jotai';
-import { tvProgram } from '../../../../../infrastructure/state/iptv';
+import { useCallback, useEffect, useReducer, useState } from 'react';
+import { TvProgram } from '../../../../../domain/iptv/tv-program/TvProgram';
 
 enum KeyEventEnum {
   ArrowUp,
@@ -11,34 +10,84 @@ function toEnum(key: string): KeyEventEnum {
   return KeyEventEnum[key as keyof typeof KeyEventEnum];
 }
 
-export function useChangeTvProgramHook() {
-  const setTvProgram = useSetAtom(tvProgram);
+export enum ActionTypeEnum {
+  INCREMENT,
+  DECREMENT,
+  INCREMENT_RESET,
+  DECREMENT_RESET,
+}
+
+type ActionType = {
+  type: ActionTypeEnum;
+};
+
+type Payload = {
+  count: number;
+};
+
+function tvProgramReducer(payload: Payload, action: ActionType) {
+  switch (action.type) {
+    case ActionTypeEnum.INCREMENT:
+      return { ...payload, count: payload.count + 1 };
+    case ActionTypeEnum.DECREMENT:
+      return { ...payload, count: payload.count - 1 };
+    case ActionTypeEnum.INCREMENT_RESET:
+      return { ...payload, count: 0 };
+    case ActionTypeEnum.DECREMENT_RESET:
+      return { ...payload, count: 0 };
+
+    default:
+      console.log('breaking');
+      break;
+  }
+  return payload;
+}
+
+export function useChangeTvProgramHook(): [TvProgram, CallableFunction] {
+  const [tvPrograms, setTvPrograms] = useState<string[]>([]);
+  const [tvProgram, setTvProgram] = useState<TvProgram>({ programName: '', count: 0 });
+  const [state, dispatch] = useReducer(tvProgramReducer, { count: 0 });
+  // const [cursor, setCursor] = useState(0);
+
   /** order maters */
 
-  const onKeyUp = useCallback(() => {
-    setTvProgram({ programName: 'PRO TV' });
-    // return event.preventDefault();
-  }, [setTvProgram]);
+  // console.log(tvPrograms.length);
 
-  const onKeyDown = useCallback(() => {
-    setTvProgram({ programName: 'Antena 1' });
-    // return event.preventDefault();
-  }, [setTvProgram]);
+  ///////////////https://codesandbox.io/s/react-hooks-navigate-list-with-keyboard-eowzo
+  const onArrowUp = useCallback(() => {
+    if (state.count < tvPrograms.length - 1) {
+      dispatch({ type: ActionTypeEnum.INCREMENT });
+    } else {
+      dispatch({ type: ActionTypeEnum.INCREMENT_RESET });
+    }
+  }, [tvPrograms.length, state.count]);
+
+  const onArrowDown = useCallback(() => {
+    if (state.count > 0) {
+      dispatch({ type: ActionTypeEnum.DECREMENT });
+    } else {
+      dispatch({ type: ActionTypeEnum.INCREMENT_RESET });
+    }
+  }, [state.count]);
 
   const keyEventHandler = useCallback(
     (event: KeyboardEvent) => {
       const key = event.key;
       if (key) {
         if (toEnum(key) === KeyEventEnum.ArrowUp) {
-          onKeyUp();
+          onArrowUp();
         }
         if (toEnum(key) === KeyEventEnum.ArrowDown) {
-          onKeyDown();
+          onArrowDown();
         }
       }
     },
-    [onKeyUp, onKeyDown],
+    [onArrowUp, onArrowDown],
   );
+
+  useEffect(() => {
+    setTvProgram({ programName: tvPrograms[state.count], count: state.count });
+  }, [state, tvPrograms]);
 
   useEffect(() => {
     window.addEventListener('keydown', keyEventHandler);
@@ -46,4 +95,6 @@ export function useChangeTvProgramHook() {
       window.removeEventListener('keydown', keyEventHandler);
     };
   }, [keyEventHandler]);
+
+  return [tvProgram, setTvPrograms];
 }
