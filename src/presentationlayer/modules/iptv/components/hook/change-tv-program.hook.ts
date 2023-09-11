@@ -19,6 +19,7 @@ export enum ActionTypeEnum {
 
 type ActionType = {
   type: ActionTypeEnum;
+  length: number;
 };
 
 type Payload = {
@@ -34,7 +35,7 @@ function tvProgramReducer(payload: Payload, action: ActionType) {
     case ActionTypeEnum.INCREMENT_RESET:
       return { ...payload, count: 0 };
     case ActionTypeEnum.DECREMENT_RESET:
-      return { ...payload, count: 0 };
+      return { ...payload, count: action.length };
 
     default:
       console.log('breaking');
@@ -47,28 +48,23 @@ export function useChangeTvProgramHook(): [TvProgram, CallableFunction] {
   const [tvPrograms, setTvPrograms] = useState<string[]>([]);
   const [tvProgram, setTvProgram] = useState<TvProgram>({ programName: '', count: 0 });
   const [state, dispatch] = useReducer(tvProgramReducer, { count: 0 });
-  // const [cursor, setCursor] = useState(0);
-
-  /** order maters */
-
-  // console.log(tvPrograms.length);
 
   ///////////////https://codesandbox.io/s/react-hooks-navigate-list-with-keyboard-eowzo
   const onArrowUp = useCallback(() => {
     if (state.count < tvPrograms.length - 1) {
-      dispatch({ type: ActionTypeEnum.INCREMENT });
+      dispatch({ type: ActionTypeEnum.INCREMENT, length: tvPrograms.length });
     } else {
-      dispatch({ type: ActionTypeEnum.INCREMENT_RESET });
+      dispatch({ type: ActionTypeEnum.INCREMENT_RESET, length: tvPrograms.length });
     }
   }, [tvPrograms.length, state.count]);
 
   const onArrowDown = useCallback(() => {
     if (state.count > 0) {
-      dispatch({ type: ActionTypeEnum.DECREMENT });
+      dispatch({ type: ActionTypeEnum.DECREMENT, length: tvPrograms.length });
     } else {
-      dispatch({ type: ActionTypeEnum.INCREMENT_RESET });
+      dispatch({ type: ActionTypeEnum.DECREMENT_RESET, length: tvPrograms.length - 1 });
     }
-  }, [state.count]);
+  }, [tvPrograms.length, state.count]);
 
   const keyEventHandler = useCallback(
     (event: KeyboardEvent) => {

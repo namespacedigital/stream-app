@@ -22,7 +22,7 @@ export function CurrentTvProgram() {
   }, [selectedTvProgramState]);
   return (
     <>
-      {isTvProgramDescOpen && (
+      {isTvProgramDescOpen && selectedTvProgramState && (
         <div className='current-tv-program__description'>
           <div>{selectedTvProgramState.programName}</div>
           <div>{selectedTvProgramState.count}</div>

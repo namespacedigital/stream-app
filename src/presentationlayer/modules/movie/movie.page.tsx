@@ -57,6 +57,7 @@ export default function MoviePage() {
 
   return (
     <div className='movie'>
+      <div className='movie__sidebar'></div>
       <div className='movie__content'>
         <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
       </div>

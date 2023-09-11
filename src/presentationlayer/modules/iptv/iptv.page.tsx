@@ -77,6 +77,7 @@ export default function IptvPage() {
 
   return (
     <div className='iptv' onClick={() => console.log()}>
+      <div className='iptv__sidebar'>tv</div>
       <div className='iptv__content'>
         <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
       </div>
