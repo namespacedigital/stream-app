@@ -1,10 +1,6 @@
 import { useCallback, useEffect, useReducer, useState } from 'react';
 import { TvProgram } from '../../../../../domain/iptv/tv-program/TvProgram';
-
-enum KeyEventEnum {
-  ArrowUp,
-  ArrowDown,
-}
+import { KeyEventEnum } from '../../../../../domain/key/key-event.enum';
 
 function toEnum(key: string): KeyEventEnum {
   return KeyEventEnum[key as keyof typeof KeyEventEnum];
@@ -44,7 +40,7 @@ function tvProgramReducer(payload: Payload, action: ActionType) {
   return payload;
 }
 
-export function useChangeTvProgramHook(): [TvProgram, CallableFunction] {
+export function useChangeTvProgramHook(): [TvProgram, CallableFunction, string[]] {
   const [tvPrograms, setTvPrograms] = useState<string[]>([]);
   const [tvProgram, setTvProgram] = useState<TvProgram>({ programName: '', count: 0 });
   const [state, dispatch] = useReducer(tvProgramReducer, { count: 0 });
@@ -69,11 +65,15 @@ export function useChangeTvProgramHook(): [TvProgram, CallableFunction] {
   const keyEventHandler = useCallback(
     (event: KeyboardEvent) => {
       const key = event.key;
+
       if (key) {
-        if (toEnum(key) === KeyEventEnum.ArrowUp) {
+        if (key === KeyEventEnum.Down) {
+          onArrowDown();
+        } else if (key === KeyEventEnum.Down) {
+          onArrowDown();
+        } else if (toEnum(key) === KeyEventEnum.ArrowUp) {
           onArrowUp();
-        }
-        if (toEnum(key) === KeyEventEnum.ArrowDown) {
+        } else if (toEnum(key) === KeyEventEnum.ArrowDown) {
           onArrowDown();
         }
       }
@@ -92,5 +92,5 @@ export function useChangeTvProgramHook(): [TvProgram, CallableFunction] {
     };
   }, [keyEventHandler]);
 
-  return [tvProgram, setTvPrograms];
+  return [tvProgram, setTvPrograms, tvPrograms];
 }

@@ -1,0 +1,31 @@
+.tv-programs-sidebar {
+
+
+
+
+  height: 100%;
+
+  //filter blur white
+  //box-shadow: 0 10px 20px rgba(0, 0, 0, .1);
+  //background: rgba(255, 255, 255, 0.4);
+  //backdrop-filter: blur(20px);
+  //border: 1px solid rgba(255, 255, 255, 0.25);
+  //border-radius: 10px;
+  //end filter
+  box-shadow: 0 10px 20px rgba(0, 0, 0, .1);
+  background: hsla(0, 0%, 100%, .3);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 0.3rem;
+  overflow: auto;
+
+  &__list {
+    display: flex;
+    flex-flow: column;
+    list-style: none;
+    li {
+
+
+    }
+  }
+}
