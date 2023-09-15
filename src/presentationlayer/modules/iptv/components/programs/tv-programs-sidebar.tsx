@@ -1,6 +1,6 @@
 import './tv-programs-sidebar.scss';
 import { useChangeTvProgramHook } from '../hook/change-tv-program.hook';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { useAtom } from '../../../../../infrastructure/state/jotai';
 import { selectedTvProgram } from '../../../../../infrastructure/state/iptv';
@@ -13,12 +13,11 @@ interface TvProgramsProps {
 export function TvProgramsSidebar({ allTvPrograms, callback }: TvProgramsProps) {
   const [selectedTvProgramState, setSelectedProgramState] = useAtom(selectedTvProgram);
   const [programList, setProgramList] = useState<string[][]>([]);
+  const [tvProgramSectionToDisplay, setTvProgramSectionToDisplay] = useState<string[]>([]);
 
-  const [tvProgram, setTvPrograms, currentDisplayedList] = useChangeTvProgramHook();
-  /**
-   * break list in array of 10 items to display
-   */
-  useEffect(() => {
+  const [tvProgram, setTvPrograms] = useChangeTvProgramHook();
+
+  const getBiDimensionalTvPrograms = useCallback(() => {
     let biDimensionalProgramArray = [];
 
     for (let i = 0; i < allTvPrograms.length; i++) {
@@ -28,18 +27,41 @@ export function TvProgramsSidebar({ allTvPrograms, callback }: TvProgramsProps) 
         biDimensionalProgramArray[biDimensionalProgramArray.length - 1].push(allTvPrograms[i]);
       }
     }
-
-    setProgramList(biDimensionalProgramArray);
+    return biDimensionalProgramArray;
   }, [allTvPrograms]);
 
   /**
-   * handle the fetching of list
+   * break list in array of 10 items to display
+   */
+  useEffect(() => {
+    let biDimensionalProgramArray = getBiDimensionalTvPrograms();
+
+    setProgramList(biDimensionalProgramArray);
+  }, [allTvPrograms, getBiDimensionalTvPrograms]);
+
+  /**
+   * pass list to hook
    */
   useEffect(() => {
     if (programList.length > 0) {
-      setTvPrograms(programList[0]);
+      setTvPrograms(allTvPrograms);
     }
-  }, [programList, setTvPrograms]);
+  }, [allTvPrograms, programList.length, setTvPrograms]);
+
+  /**
+   * Determine what section of channel to display
+   */
+  useEffect(() => {
+    let biDimensionalProgramArray = getBiDimensionalTvPrograms();
+    for (const tvProgramArrayKey in biDimensionalProgramArray) {
+      const hasTheTvProgramInThisArray = biDimensionalProgramArray[tvProgramArrayKey].some((element) => element === tvProgram.programName);
+      if (hasTheTvProgramInThisArray) {
+        // console.log(tvProgramArrayKey);
+        setTvProgramSectionToDisplay(biDimensionalProgramArray[tvProgramArrayKey]);
+      }
+    }
+    // setTvProgramSectionToDisplay(biDimensionalProgramArray[0]);
+  }, [getBiDimensionalTvPrograms, tvProgram.programName]);
 
   const handleChangeProgram = (program: string, count: number) => {
     // console.log(tvProgram);
@@ -51,7 +73,7 @@ export function TvProgramsSidebar({ allTvPrograms, callback }: TvProgramsProps) 
     <div className='tv-programs-sidebar'>
       <h1 className='tv-programs-sidebar__header'>Alege program</h1>
       <ul className='tv-programs-sidebar__list'>
-        {currentDisplayedList.map((program, index) => {
+        {tvProgramSectionToDisplay.map((program, index) => {
           return (
             <li
               className={classNames([
