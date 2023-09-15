@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { useEffect, useRef } from 'react';
 import videojs from 'video.js';
 
 // Styles
 import 'video.js/dist/video-js.css';
-import { useEffect, useRef } from 'react';
 
 interface VideoPlayerProps {
   readonly options: any;
@@ -26,7 +26,7 @@ export function VideoPlayer({ options, onReady }: VideoPlayerProps) {
       }
 
       const player = (playerRef.current = videojs(videoElement, options, () => {
-        videojs.log('player is ready');
+        // videojs.log('player is ready');
         onReady && onReady(player);
       }));
 

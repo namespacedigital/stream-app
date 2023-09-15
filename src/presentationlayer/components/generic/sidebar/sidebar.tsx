@@ -4,10 +4,10 @@ import { CloseIcon } from '../icons/icons';
 import './sidebar.scss';
 
 interface SidebarProps extends PropsWithChildren {
-  readonly openSidebarCallback: CallableFunction;
+  readonly openSidebarCallback: (setIsOpen: React.Dispatch<React.SetStateAction<boolean>>) => void;
+  readonly closeSidebarCallback: () => void;
 }
-export function Sidebar({ openSidebarCallback, children }: SidebarProps) {
-  const [isFullScreen, setIsFullScreen] = useState(false);
+export function Sidebar({ openSidebarCallback, closeSidebarCallback, children }: SidebarProps) {
   const [isSidebarAnimationRunning, setIsSidebarAnimationRunning] = useState(false);
   const animationDuration = 300;
   const [isOpen, setIsOpen] = useState(false);
@@ -17,6 +17,7 @@ export function Sidebar({ openSidebarCallback, children }: SidebarProps) {
   }, [openSidebarCallback]);
 
   function closeSidebar() {
+    closeSidebarCallback();
     setIsOpen(false);
     setIsSidebarAnimationRunning(true);
     setTimeout(() => {

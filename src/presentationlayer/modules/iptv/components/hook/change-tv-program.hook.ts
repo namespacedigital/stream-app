@@ -34,16 +34,16 @@ function tvProgramReducer(payload: Payload, action: ActionType) {
       return { ...payload, count: action.length };
 
     default:
-      console.log('breaking');
       break;
   }
   return payload;
 }
 
-export function useChangeTvProgramHook(): [TvProgram, CallableFunction, string[]] {
+export function useChangeTvProgramHook(): [TvProgram, CallableFunction, string[], CallableFunction] {
   const [tvPrograms, setTvPrograms] = useState<string[]>([]);
   const [tvProgram, setTvProgram] = useState<TvProgram>({ programName: '', count: 0 });
   const [state, dispatch] = useReducer(tvProgramReducer, { count: 0 });
+  const [hookEnabled, setHookEnabled] = useState(true);
 
   ///////////////https://codesandbox.io/s/react-hooks-navigate-list-with-keyboard-eowzo
   const onArrowUp = useCallback(() => {
@@ -66,15 +66,16 @@ export function useChangeTvProgramHook(): [TvProgram, CallableFunction, string[]
     (event: KeyboardEvent) => {
       const key = event.key;
 
+      //inverse actions to see the list navigation
       if (key) {
         if (key === KeyEventEnum.Down) {
-          onArrowDown();
-        } else if (key === KeyEventEnum.Down) {
-          onArrowDown();
-        } else if (toEnum(key) === KeyEventEnum.ArrowUp) {
           onArrowUp();
-        } else if (toEnum(key) === KeyEventEnum.ArrowDown) {
+        } else if (key === KeyEventEnum.Down) {
+          onArrowUp();
+        } else if (toEnum(key) === KeyEventEnum.ArrowUp) {
           onArrowDown();
+        } else if (toEnum(key) === KeyEventEnum.ArrowDown) {
+          onArrowUp();
         }
       }
     },
@@ -86,11 +87,13 @@ export function useChangeTvProgramHook(): [TvProgram, CallableFunction, string[]
   }, [state, tvPrograms]);
 
   useEffect(() => {
-    window.addEventListener('keydown', keyEventHandler);
-    return () => {
-      window.removeEventListener('keydown', keyEventHandler);
-    };
-  }, [keyEventHandler]);
+    if (hookEnabled) {
+      window.addEventListener('keydown', keyEventHandler);
+      return () => {
+        window.removeEventListener('keydown', keyEventHandler);
+      };
+    }
+  }, [hookEnabled, keyEventHandler]);
 
-  return [tvProgram, setTvPrograms, tvPrograms];
+  return [tvProgram, setTvPrograms, tvPrograms, setHookEnabled];
 }

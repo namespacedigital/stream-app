@@ -1,29 +1,27 @@
-import { useAtom, useSetAtom } from '../../../infrastructure/state/jotai';
+import { useSetAtom } from '../../../infrastructure/state/jotai';
 import './iptv.scss';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { APIS } from '../../../infrastructure/state/config';
 import videojs from 'video.js';
 import { VideoPlayer } from '../../components/specific/player/VideoPlayer';
 import { useChangeTvProgramHook } from './components/hook/change-tv-program.hook';
-import { selectedTvProgram } from '../../../infrastructure/state/iptv';
 import { CurrentTvProgram } from './components/current-program/current-tv-program';
 import { getTvPrograms } from '../../../application/service/iptv/tv-program/get-tv-programs';
 import { AxiosError } from 'axios';
 import { TvProgramsSidebar } from './components/programs/tv-programs-sidebar';
-import { KeyEventEnum } from '../../../domain/key/key-event.enum';
 import { Sidebar } from '../../components/generic/sidebar/sidebar';
+import { selectedTvProgram } from '../../../infrastructure/state/iptv';
+
 type Error = {
   readonly status?: number;
   readonly message: string;
 };
 export default function IptvPage() {
   const playerRef = useRef<any>(null);
-
   const setSelectedTvProgram = useSetAtom(selectedTvProgram);
   const [error, setError] = useState<Error | null>(null);
-  const [tvProgram, setTvPrograms, tvPrograms] = useChangeTvProgramHook();
+  const [tvProgram, setTvPrograms, tvPrograms, setChangeProgramsAvailable] = useChangeTvProgramHook();
 
-  videojs.log(`tv program: ${tvProgram}`);
   const videoJsOptions = {
     autoplay: true,
     controls: false,
@@ -46,7 +44,6 @@ export default function IptvPage() {
 
     // You can handle player events here, for example:
     player.on('waiting', () => {
-      // const interval = setInterval(() => videojs.log('player is waiting'), 1000);
       videojs.log('player is waiting');
     });
 
@@ -70,22 +67,6 @@ export default function IptvPage() {
     // });
   };
 
-  const keyEventHandler = useCallback((event: KeyboardEvent) => {
-    const key = event.key;
-    if (key) {
-      if (key === KeyEventEnum.Enter) {
-        // setIsSidebarOpen(true);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener('keydown', keyEventHandler);
-    return () => {
-      window.removeEventListener('keydown', keyEventHandler);
-    };
-  }, [keyEventHandler]);
-
   useEffect(() => {
     setSelectedTvProgram(tvProgram);
   }, [setSelectedTvProgram, tvProgram]);
@@ -102,18 +83,33 @@ export default function IptvPage() {
       });
   }, [setTvPrograms]);
 
-  let setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  let setIsTvProgramsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   const openSidebarCallback = (setIsOpenCallback: React.Dispatch<React.SetStateAction<boolean>>) => {
-    setIsSidebarOpen = setIsOpenCallback;
+    setIsTvProgramsSidebarOpen = setIsOpenCallback;
+  };
+
+  const closeSidebarCallback = () => {
+    setChangeProgramsAvailable(true);
   };
 
   return (
     <>
-      <Sidebar openSidebarCallback={openSidebarCallback}>
-        <TvProgramsSidebar tvPrograms={tvPrograms} />
+      <Sidebar openSidebarCallback={openSidebarCallback} closeSidebarCallback={closeSidebarCallback}>
+        <TvProgramsSidebar
+          allTvPrograms={tvPrograms}
+          callback={() => {
+            setIsTvProgramsSidebarOpen(false);
+            setChangeProgramsAvailable(true);
+          }}
+        />
       </Sidebar>
-      {/*<TvProgramsSidebar tvPrograms={tvPrograms} />*/}
-      <div onClick={() => setIsSidebarOpen(true)} className='iptv'>
+      <div
+        onClick={() => {
+          setIsTvProgramsSidebarOpen(true);
+          setChangeProgramsAvailable(false);
+        }}
+        className='iptv'
+      >
         <div className='iptv__sidebar'></div>
         <div className='iptv__content'>
           {error !== null && (
