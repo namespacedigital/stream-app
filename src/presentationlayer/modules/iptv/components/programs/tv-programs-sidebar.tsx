@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { useAtom } from '../../../../../infrastructure/state/jotai';
 import { selectedTvProgram } from '../../../../../infrastructure/state/iptv';
+import PlayingLoader from '../../../../components/generic/loaders/playing.loader';
 
 interface TvProgramsProps {
   readonly allTvPrograms: string[];
@@ -88,7 +89,8 @@ export function TvProgramsSidebar({ allTvPrograms, callback }: TvProgramsProps) 
               key={index}
             >
               <button type='button' onClick={() => handleChangeProgram(program, index)}>
-                {program}
+                {Object.keys(allTvPrograms).find((key: any) => allTvPrograms[key] === program)}. {program}{' '}
+                {selectedTvProgramState && selectedTvProgramState.programName === program && <PlayingLoader />}
               </button>
             </li>
           );
