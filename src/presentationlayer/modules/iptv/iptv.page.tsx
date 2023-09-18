@@ -1,4 +1,4 @@
-import { useSetAtom } from '../../../infrastructure/state/jotai';
+import { useAtom } from '../../../infrastructure/state/jotai';
 import './iptv.scss';
 import React, { useEffect, useRef, useState } from 'react';
 import { APIS } from '../../../infrastructure/state/config';
@@ -18,24 +18,9 @@ type Error = {
 };
 export default function IptvPage() {
   const playerRef = useRef<any>(null);
-  const setSelectedTvProgram = useSetAtom(selectedTvProgram);
+  const [selectedTvProgramState, setSelectedTvProgramState] = useAtom(selectedTvProgram);
   const [error, setError] = useState<Error | null>(null);
-  const [tvProgram, setTvPrograms, tvPrograms, setChangeProgramsAvailable] = useChangeTvProgramHook();
-
-  const videoJsOptions = {
-    autoplay: true,
-    controls: false,
-    responsive: true,
-    fluid: true,
-    controlBar: false,
-    sources: [
-      {
-        src: APIS.API_URL + `/api/v1/iptv/${tvProgram.programName}`,
-        // src: APIS.API_URL + `/movies/test.mkv`,
-        type: 'video/mp4',
-      },
-    ],
-  };
+  const { tvProgram, setTvPrograms, enable, disable, tvPrograms } = useChangeTvProgramHook();
 
   const handlePlayerReady = (player: any) => {
     playerRef.current = player;
@@ -68,10 +53,6 @@ export default function IptvPage() {
   };
 
   useEffect(() => {
-    setSelectedTvProgram(tvProgram);
-  }, [setSelectedTvProgram, tvProgram]);
-
-  useEffect(() => {
     getTvPrograms()
       .then((result) => {
         setTvPrograms(Object.keys(result));
@@ -89,8 +70,14 @@ export default function IptvPage() {
   };
 
   const closeSidebarCallback = () => {
-    setChangeProgramsAvailable(true);
+    enable();
   };
+
+  useEffect(() => {
+    if (tvProgram && tvProgram.programName !== '') {
+      setSelectedTvProgramState(tvProgram);
+    }
+  }, [setSelectedTvProgramState, tvProgram]);
 
   return (
     <>
@@ -99,14 +86,14 @@ export default function IptvPage() {
           allTvPrograms={tvPrograms}
           callback={() => {
             setIsTvProgramsSidebarOpen(false);
-            setChangeProgramsAvailable(true);
+            enable();
           }}
         />
       </Sidebar>
       <div
         onClick={() => {
           setIsTvProgramsSidebarOpen(true);
-          setChangeProgramsAvailable(false);
+          disable();
         }}
         className='iptv'
       >
@@ -117,7 +104,25 @@ export default function IptvPage() {
               {error.message} {error.status}
             </span>
           )}
-          {error === null && <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />}
+          {error === null && selectedTvProgramState && selectedTvProgramState.programName && (
+            <VideoPlayer
+              options={{
+                autoplay: true,
+                controls: false,
+                responsive: true,
+                fluid: true,
+                controlBar: false,
+                sources: [
+                  {
+                    src: APIS.API_URL + `/api/v1/iptv/${selectedTvProgramState.programName}`,
+                    // src: APIS.API_URL + `/movies/test.mkv`,
+                    type: 'video/mp4',
+                  },
+                ],
+              }}
+              onReady={handlePlayerReady}
+            />
+          )}
         </div>
         <CurrentTvProgram />
       </div>

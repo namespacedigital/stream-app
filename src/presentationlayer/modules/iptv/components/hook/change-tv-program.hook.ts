@@ -39,11 +39,18 @@ function tvProgramReducer(payload: Payload, action: ActionType) {
   return payload;
 }
 
-export function useChangeTvProgramHook(): [TvProgram, CallableFunction, string[], CallableFunction] {
+interface TvProgramHook {
+  readonly tvProgram: TvProgram;
+  readonly setTvPrograms: CallableFunction;
+  readonly disable: CallableFunction;
+  readonly enable: CallableFunction;
+  readonly tvPrograms: string[];
+}
+
+export function useChangeTvProgramHook(): TvProgramHook {
   const [tvPrograms, setTvPrograms] = useState<string[]>([]);
   const [tvProgram, setTvProgram] = useState<TvProgram>({ programName: '', count: 0 });
   const [state, dispatch] = useReducer(tvProgramReducer, { count: 0 });
-  const [hookEnabled, setHookEnabled] = useState(true);
 
   ///////////////https://codesandbox.io/s/react-hooks-navigate-list-with-keyboard-eowzo
   const onArrowUp = useCallback(() => {
@@ -70,8 +77,8 @@ export function useChangeTvProgramHook(): [TvProgram, CallableFunction, string[]
       if (key) {
         if (key === KeyEventEnum.Down) {
           onArrowUp();
-        } else if (key === KeyEventEnum.Down) {
-          onArrowUp();
+        } else if (key === KeyEventEnum.Up) {
+          onArrowDown();
         } else if (toEnum(key) === KeyEventEnum.ArrowUp) {
           onArrowDown();
         } else if (toEnum(key) === KeyEventEnum.ArrowDown) {
@@ -86,14 +93,19 @@ export function useChangeTvProgramHook(): [TvProgram, CallableFunction, string[]
     setTvProgram({ programName: tvPrograms[state.count], count: state.count });
   }, [state, tvPrograms]);
 
-  useEffect(() => {
-    if (hookEnabled) {
-      window.addEventListener('keydown', keyEventHandler);
-      return () => {
-        window.removeEventListener('keydown', keyEventHandler);
-      };
-    }
-  }, [hookEnabled, keyEventHandler]);
+  const disable = () => {
+    window.removeEventListener('keydown', keyEventHandler);
+  };
 
-  return [tvProgram, setTvPrograms, tvPrograms, setHookEnabled];
+  const enable = () => {
+    window.addEventListener('keydown', keyEventHandler);
+  };
+  useEffect(() => {
+    window.addEventListener('keydown', keyEventHandler);
+    return () => {
+      window.removeEventListener('keydown', keyEventHandler);
+    };
+  }, [keyEventHandler]);
+
+  return { tvProgram, setTvPrograms, disable, enable, tvPrograms };
 }
