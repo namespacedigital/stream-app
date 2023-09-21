@@ -1,0 +1,19 @@
+.movie-menu {
+  flex: 1;
+  max-width: 12%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background-color:  var(--gray-800);
+  ul {
+    display: flex;
+    flex-flow: column;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  &__has-focus-child {
+    background-color:  var(--gray-700);
+  }
+}

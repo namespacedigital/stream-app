@@ -1,47 +1,9 @@
-.movie {
-  width: 100%;
+.movie{
+  width: 100vw;
   height:100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-  button {
-    background: none;
-    color: inherit;
-    border: none;
-    padding: 0;
-    font: inherit;
-    cursor: pointer;
-    outline: inherit;
-  }
-  &__sidebar {
-    z-index: 10;
-    position: absolute;
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-right: 1rem;
-    width: 20%;
-    height: 95%;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    //filter blur
-    //box-shadow: 0 10px 20px rgba(0, 0, 0, .1);
-    //background: rgba(255, 255, 255, 0.4);
-    //backdrop-filter: blur(20px);
-    //border: 1px solid rgba(255, 255, 255, 0.25);
-    //border-radius: 10px;
-    //end filter
-    box-shadow: 0 10px 20px rgba(0, 0, 0, .1);
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 0.6rem;
-
-  }
-  &__content {
-    width: 100%;
-
-    height: auto;
-  }
+  //justify-content: flex-start;
+  //align-items: center;
+  flex-flow: row;
+  background-color:  var(--gray-800);
 }

@@ -1,66 +1,82 @@
 import './movie.scss';
-import { VideoPlayer } from '../../components/specific/player/VideoPlayer';
-import { useRef } from 'react';
-import videojs from 'video.js';
-import { APIS } from '../../../infrastructure/state/config';
-import { useSetAtom } from '../../../infrastructure/state/jotai';
-import { isTopMenuOpen } from '../../../infrastructure/state/menu';
+import { init } from '@noriginmedia/norigin-spatial-navigation';
+import { Menu } from './components/menu/menu';
+import { Content } from './components/movie-content/content';
+import { IAsset } from './components/movie-content/asset';
+
+export const assets: IAsset[] = [
+  {
+    title: 'Asset 1',
+    color: '#714ADD',
+  },
+  {
+    title: 'Asset 2',
+    color: '#AB8DFF',
+  },
+  {
+    title: 'Asset 3',
+    color: '#512EB0',
+  },
+  {
+    title: 'Asset 4',
+    color: '#714ADD',
+  },
+  {
+    title: 'Asset 5',
+    color: '#AB8DFF',
+  },
+  {
+    title: 'Asset 6',
+    color: '#512EB0',
+  },
+  {
+    title: 'Asset 7',
+    color: '#714ADD',
+  },
+  {
+    title: 'Asset 8',
+    color: '#AB8DFF',
+  },
+  {
+    title: 'Asset 9',
+    color: '#512EB0',
+  },
+];
+
+const rows = [
+  {
+    title: 'Recommended',
+    assets: assets,
+  },
+  {
+    title: 'Movies',
+    assets: assets,
+  },
+  {
+    title: 'Series',
+    assets: assets,
+  },
+  {
+    title: 'TV Channels',
+    assets: assets,
+  },
+  {
+    title: 'Sport',
+    assets: assets,
+  },
+];
 
 export default function MoviePage() {
-  const playerRef = useRef<any>(null);
-  const setIsMenuOpen = useSetAtom(isTopMenuOpen);
+  init({
+    // options
+  });
 
-  const videoJsOptions = {
-    autoplay: true,
-    controls: true,
-    responsive: true,
-    fluid: true,
-    controlBar: {
-      fullscreenToggle: false,
-      pictureInPictureToggle: false,
-    },
-    sources: [
-      {
-        src: APIS.API_URL + `/api/v1/movies/${'rick.mkv'}`,
-        type: 'video/mp4',
-      },
-    ],
-  };
-
-  const handlePlayerReady = (player: any) => {
-    playerRef.current = player;
-
-    player.tech_.off('dblclick');
-
-    // You can handle player events here, for example:
-    player.on('waiting', () => {
-      videojs.log('player is waiting');
-    });
-
-    player.on('pause', () => {
-      setIsMenuOpen(true);
-      videojs.log('player is paused');
-    });
-
-    player.on('play', () => {
-      setIsMenuOpen(false);
-      videojs.log('player is playing');
-    });
-
-    // player.on('play', () => {
-    //   setTimeout(() => {
-    //     setIsMenuOpenState(false);
-    //   }, 3000);
-    //   videojs.log('player will dispose');
-    // });
-  };
+  const menuItems = ['Filme', 'Seriale'];
 
   return (
     <div className='movie'>
-      <div className='movie__sidebar'></div>
-      <div className='movie__content'>
-        <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
-      </div>
+      <Menu focusKey='MENU' items={menuItems} />
+      <Content rows={rows} focusKey='CONTENT' />
     </div>
   );
 }

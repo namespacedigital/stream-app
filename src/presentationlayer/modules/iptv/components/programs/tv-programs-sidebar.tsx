@@ -16,7 +16,7 @@ export function TvProgramsSidebar({ allTvPrograms, callback }: TvProgramsProps) 
   const [programList, setProgramList] = useState<string[][]>([]);
   const [tvProgramSectionToDisplay, setTvProgramSectionToDisplay] = useState<string[]>([]);
 
-  const { tvProgram, setTvPrograms } = useChangeTvProgramHook();
+  const { tvProgram, setTvPrograms } = useChangeTvProgramHook({ reverse: true });
 
   const getBiDimensionalTvPrograms = useCallback(() => {
     let biDimensionalProgramArray = [];

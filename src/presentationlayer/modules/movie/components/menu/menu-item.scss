@@ -1,0 +1,41 @@
+.movie-menu-item {
+  height: 3rem;
+  color: #ffffff;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  button {
+    width: 100%;
+  }
+
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+
+  &:after {
+    content: '';
+    display: block;
+    margin: auto;
+    height: 0.2rem;
+    width: 0;
+    background: transparent;
+    transition: width .5s ease, background-color .5s ease;
+  }
+  //enlarge :
+  &__focused:after {
+    width: 100%;
+    background:white;
+  }
+
+  &__selected:after {
+    width: 40%;
+    background:var(--gray-400);
+  }
+
+
+}

@@ -11,6 +11,7 @@ import { AxiosError } from 'axios';
 import { TvProgramsSidebar } from './components/programs/tv-programs-sidebar';
 import { Sidebar } from '../../components/generic/sidebar/sidebar';
 import { selectedTvProgram } from '../../../infrastructure/state/iptv';
+import { ExcludedPrograms } from '../../../domain/iptv/tv-program/excluded-programs';
 
 type Error = {
   readonly status?: number;
@@ -20,7 +21,7 @@ export default function IptvPage() {
   const playerRef = useRef<any>(null);
   const [selectedTvProgramState, setSelectedTvProgramState] = useAtom(selectedTvProgram);
   const [error, setError] = useState<Error | null>(null);
-  const { tvProgram, setTvPrograms, enable, disable, tvPrograms } = useChangeTvProgramHook();
+  const { tvProgram, setTvPrograms, enable, disable, tvPrograms } = useChangeTvProgramHook({});
 
   const handlePlayerReady = (player: any) => {
     playerRef.current = player;
@@ -55,7 +56,11 @@ export default function IptvPage() {
   useEffect(() => {
     getTvPrograms()
       .then((result) => {
-        setTvPrograms(Object.keys(result));
+        setTvPrograms(
+          Object.keys(result)
+            .filter((program) => !ExcludedPrograms.includes(program))
+            .sort(),
+        );
         setError(null);
         // console.log(Object.keys(result));
       })

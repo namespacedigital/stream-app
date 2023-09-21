@@ -47,7 +47,11 @@ interface TvProgramHook {
   readonly tvPrograms: string[];
 }
 
-export function useChangeTvProgramHook(): TvProgramHook {
+interface TvProgramHookProps {
+  readonly reverse?: boolean;
+}
+
+export function useChangeTvProgramHook({ reverse }: TvProgramHookProps): TvProgramHook {
   const [tvPrograms, setTvPrograms] = useState<string[]>([]);
   const [tvProgram, setTvProgram] = useState<TvProgram>({ programName: '', count: 0 });
   const [state, dispatch] = useReducer(tvProgramReducer, { count: 0 });
@@ -74,19 +78,32 @@ export function useChangeTvProgramHook(): TvProgramHook {
       const key = event.key;
 
       //inverse actions to see the list navigation
+
       if (key) {
-        if (key === KeyEventEnum.Down) {
-          onArrowUp();
-        } else if (key === KeyEventEnum.Up) {
-          onArrowDown();
-        } else if (toEnum(key) === KeyEventEnum.ArrowUp) {
-          onArrowDown();
-        } else if (toEnum(key) === KeyEventEnum.ArrowDown) {
-          onArrowUp();
+        if (reverse) {
+          if (key === KeyEventEnum.Down) {
+            onArrowUp();
+          } else if (key === KeyEventEnum.Up) {
+            onArrowDown();
+          } else if (toEnum(key) === KeyEventEnum.ArrowUp) {
+            onArrowDown();
+          } else if (toEnum(key) === KeyEventEnum.ArrowDown) {
+            onArrowUp();
+          }
+        } else {
+          if (key === KeyEventEnum.Down) {
+            onArrowDown();
+          } else if (key === KeyEventEnum.Up) {
+            onArrowUp();
+          } else if (toEnum(key) === KeyEventEnum.ArrowUp) {
+            onArrowUp();
+          } else if (toEnum(key) === KeyEventEnum.ArrowDown) {
+            onArrowDown();
+          }
         }
       }
     },
-    [onArrowUp, onArrowDown],
+    [onArrowUp, onArrowDown, reverse],
   );
 
   useEffect(() => {
