@@ -5,8 +5,8 @@
   flex-flow: column;
   align-items: center;
   justify-content: flex-start;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding: 1rem;
+
   button {
     width: 100%;
   }
@@ -21,7 +21,7 @@
     content: '';
     display: block;
     margin: auto;
-    height: 0.2rem;
+    height: 0.4rem;
     width: 0;
     background: transparent;
     transition: width .5s ease, background-color .5s ease;

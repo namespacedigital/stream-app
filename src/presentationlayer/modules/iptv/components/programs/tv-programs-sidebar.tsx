@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { useAtom } from '../../../../../infrastructure/state/jotai';
 import { selectedTvProgram } from '../../../../../infrastructure/state/iptv';
 import PlayingLoader from '../../../../components/generic/loaders/playing.loader';
+import { KeyEventEnum } from '../../../../../domain/key/key-event.enum';
 
 interface TvProgramsProps {
   readonly allTvPrograms: string[];
@@ -30,6 +31,21 @@ export function TvProgramsSidebar({ allTvPrograms, callback }: TvProgramsProps) 
     }
     return biDimensionalProgramArray;
   }, [allTvPrograms]);
+
+  //read the enter program and close the sidebar
+  const keyEventHandler = useCallback(
+    (event: KeyboardEvent) => {
+      const key = event.key;
+
+      if (key) {
+        if (key === KeyEventEnum.Enter) {
+          setSelectedProgramState(tvProgram);
+          callback();
+        }
+      }
+    },
+    [callback, setSelectedProgramState, tvProgram],
+  );
 
   /**
    * break list in array of 10 items to display
@@ -63,6 +79,16 @@ export function TvProgramsSidebar({ allTvPrograms, callback }: TvProgramsProps) 
     }
     // setTvProgramSectionToDisplay(biDimensionalProgramArray[0]);
   }, [getBiDimensionalTvPrograms, tvProgram.programName]);
+
+  /**
+   * ON enter set state based on cursor sidebar hook
+   */
+  useEffect(() => {
+    window.addEventListener('keydown', keyEventHandler);
+    return () => {
+      window.removeEventListener('keydown', keyEventHandler);
+    };
+  }, [keyEventHandler]);
 
   const handleChangeProgram = (program: string, count: number) => {
     // console.log(tvProgram);

@@ -19,6 +19,7 @@ interface ContentRowProps {
 export function ContentRow({ title: rowTitle, assets, onAssetPress, onFocus }: ContentRowProps) {
   const { ref, focusKey } = useFocusable({
     onFocus,
+    saveLastFocusedChild: false,
   });
 
   const scrollingRef = React.useRef<HTMLDivElement>(null);

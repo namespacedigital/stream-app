@@ -4,66 +4,72 @@ import { Menu } from './components/menu/menu';
 import { Content } from './components/movie-content/content';
 import { IAsset } from './components/movie-content/asset';
 
-export const assets: IAsset[] = [
+export const comedy: IAsset[] = [
   {
-    title: 'Asset 1',
+    title: 'John',
     color: '#714ADD',
   },
   {
-    title: 'Asset 2',
+    title: 'Star Wars',
     color: '#AB8DFF',
   },
   {
-    title: 'Asset 3',
+    title: 'Galaxy',
     color: '#512EB0',
   },
+];
+
+export const recommended: IAsset[] = [
   {
-    title: 'Asset 4',
+    title: 'Oscar',
     color: '#714ADD',
   },
   {
-    title: 'Asset 5',
+    title: 'True light',
     color: '#AB8DFF',
   },
   {
-    title: 'Asset 6',
+    title: 'Some of',
     color: '#512EB0',
   },
+];
+
+export const sf: IAsset[] = [
   {
-    title: 'Asset 7',
+    title: 'Equilibrium',
     color: '#714ADD',
   },
   {
-    title: 'Asset 8',
+    title: 'Star Trek',
     color: '#AB8DFF',
   },
   {
-    title: 'Asset 9',
+    title: 'War',
     color: '#512EB0',
   },
 ];
 
 const rows = [
   {
-    title: 'Recommended',
-    assets: assets,
+    title: 'Recomandate',
+    assets: recommended,
   },
   {
-    title: 'Movies',
-    assets: assets,
+    title: 'Comedii',
+    assets: comedy,
   },
   {
-    title: 'Series',
-    assets: assets,
+    title: 'SF',
+    assets: sf,
   },
-  {
-    title: 'TV Channels',
-    assets: assets,
-  },
-  {
-    title: 'Sport',
-    assets: assets,
-  },
+  // {
+  //   title: 'TV Channels',
+  //   assets: assets,
+  // },
+  // {
+  //   title: 'Sport',
+  //   assets: assets,
+  // },
 ];
 
 export default function MoviePage() {

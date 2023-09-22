@@ -9,8 +9,9 @@
     font-weight: 400;
   }
   &__box {
-    width: 225px;
-    height: 127px;
+    width: 30rem;
+    height: 15rem;
+    fill: white;
     //background-color: ${({ color }) => color};
     border-color: white;
     border-style: solid;
