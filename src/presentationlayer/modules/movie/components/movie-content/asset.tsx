@@ -10,27 +10,23 @@ import classNames from 'classnames';
 import './asset.scss';
 import * as React from 'react';
 import { FilmIcon } from '../../../../components/generic/icons/icons';
-
-export interface IAsset {
-  title: string;
-  color: string;
-}
+import { Movie } from '../../../../../domain/movie/movies/Movie';
+import { APIS } from '../../../../../infrastructure/state/config';
 
 interface AssetProps {
-  title: string;
-  color: string;
+  movie: Movie;
   onEnterPress: (props: object, details: KeyPressDetails) => void;
   onFocus: (layout: FocusableComponentLayout, props: object, details: FocusDetails) => void;
 }
 
-export function Asset({ title, color, onEnterPress, onFocus }: AssetProps) {
+export function Asset({ movie, onEnterPress, onFocus }: AssetProps) {
   const { ref, focused } = useFocusable({
     onEnterPress,
     onFocus,
-    focusKey: title,
+    focusKey: movie.title,
     extraProps: {
-      title,
-      color,
+      title: movie.title,
+      posterLink: movie.posterLink,
     },
   });
 
@@ -39,11 +35,21 @@ export function Asset({ title, color, onEnterPress, onFocus }: AssetProps) {
   };
 
   return (
-    <FocusContext.Provider value={title}>
+    <FocusContext.Provider value={movie.title}>
       <div className='asset' ref={ref} data-testid='asset'>
-        <button type='button' onClick={() => handleMenu(title)}>
-          <FilmIcon className={classNames(['asset__box', { asset__box__focused: focused }])} color={color} data-testid='asset-box' />
-          <span className='asset__title'>{title}</span>
+        <button type='button' onClick={() => handleMenu(movie.title)}>
+          {movie.posterLink !== 'N/A' && (
+            <img
+              className={classNames(['asset__box', { asset__box__focused: focused }])}
+              src={`${APIS.API_URL}${movie.posterLink}`}
+              alt={movie.title}
+            />
+          )}
+          {movie.posterLink === 'N/A' && (
+            <FilmIcon className={classNames(['asset__box', { asset__box__focused: focused }])} data-testid='asset-box' />
+          )}
+
+          <span className='asset__title'>{movie.title}</span>
         </button>
       </div>
     </FocusContext.Provider>

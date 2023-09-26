@@ -7,11 +7,12 @@ import {
   KeyPressDetails,
   useFocusable,
 } from '@noriginmedia/norigin-spatial-navigation';
-import { Asset, IAsset } from './asset';
+import { Asset } from './asset';
+import { Movie } from '../../../../../domain/movie/movies/Movie';
 
 interface ContentRowProps {
   title: string;
-  assets: IAsset[];
+  assets: Movie[];
   onAssetPress: (props: object, details: KeyPressDetails) => void;
   onFocus: (layout: FocusableComponentLayout, props: object, details: FocusDetails) => void;
 }
@@ -40,8 +41,8 @@ export function ContentRow({ title: rowTitle, assets, onAssetPress, onFocus }: C
         <span className='content-row__title'>{rowTitle}</span>
         <div className='content-row__scrolling' ref={scrollingRef}>
           <div className='content-row__scrolling__content'>
-            {assets.map(({ title, color }) => (
-              <Asset key={title} title={title} color={color} onEnterPress={onAssetPress} onFocus={onAssetFocus} />
+            {assets.map((movie) => (
+              <Asset key={movie.title} movie={movie} onEnterPress={onAssetPress} onFocus={onAssetFocus} />
             ))}
           </div>
         </div>

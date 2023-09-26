@@ -3,8 +3,8 @@ import { FocusContext, init, useFocusable } from '@noriginmedia/norigin-spatial-
 import { ContentRow } from './content-row';
 
 import './content.scss';
-import { IAsset } from './asset';
-import classNames from 'classnames';
+import { Movie } from '../../../../../domain/movie/movies/Movie';
+import { APIS } from '../../../../../infrastructure/state/config';
 
 init({
   debug: false,
@@ -15,7 +15,7 @@ interface ContentProps {
   focusKey: string;
   rows: {
     title: string;
-    assets: IAsset[];
+    assets: Movie[];
   }[];
 }
 
@@ -24,7 +24,7 @@ export function Content({ rows, focusKey: focusKeyParam }: ContentProps) {
     focusKey: focusKeyParam,
   });
 
-  const [selectedAsset, setSelectedAsset] = React.useState<IAsset | null>(null);
+  const [selectedAsset, setSelectedAsset] = React.useState<Movie | null>(null);
 
   const onAssetPress = React.useCallback((asset: any) => {
     setSelectedAsset(asset);
@@ -43,16 +43,19 @@ export function Content({ rows, focusKey: focusKeyParam }: ContentProps) {
   return (
     <FocusContext.Provider value={focusKey}>
       <div className='content'>
-        <div className='content__selected-item'>
+        {selectedAsset && (
           <div
-            className={classNames(['content__selected-item__box', { 'content__selected-item__box__selected': selectedAsset }])}
-            color={selectedAsset ? selectedAsset.color : '#565b6b'}
-            data-testid='selected-box'
-          />
-          <div className='content__selected-item__title' data-testid='selected-title'>
-            {selectedAsset ? selectedAsset.title : 'Press "Enter" to select an asset'}
+            style={{
+              backgroundImage: `linear-gradient(to right, rgba(0,0,0,0) 20%,
+        rgba(0,0,0,1)), url('${APIS.API_URL}${selectedAsset.posterLink}')`,
+            }}
+            className='content__selected-item'
+          >
+            <span className='content__selected-item__title' data-testid='selected-title'>
+              {selectedAsset.title}
+            </span>
           </div>
-        </div>
+        )}
         <div className='content__scrolling-rows' ref={ref}>
           <div>
             {rows.map(({ title, assets }) => (

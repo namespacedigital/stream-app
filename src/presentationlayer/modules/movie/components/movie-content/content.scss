@@ -12,26 +12,29 @@
     }
 
     &__selected-item {
-      position: relative;
+      height: 40rem;
+      width: 100%;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      &__box{
+      flex-flow: row wrap;
+      align-items: flex-start;
+      justify-content: center;
+      background-color: black;
+      margin-bottom: 37px;
+      border-radius: 7px;
+      background-repeat: no-repeat;
+      background-size: 40% ;
+      background-position: 0 20%;
+      &__poster {
         height: 40rem;
-        width: 100%;
-        background-color: black;
-        margin-bottom: 37px;
-        border-radius: 7px;
-        &__selected {
-          background-color: red;
-        }
       }
       &__title {
-        position: absolute;
+        padding-top: 5rem;
+        padding-left: 20rem;
+        padding-right: 20rem;
         color: white;
-        font-size: 1.2rem;
+        font-size: 6rem;
         font-weight: 400;
       }
+
     }
   }
