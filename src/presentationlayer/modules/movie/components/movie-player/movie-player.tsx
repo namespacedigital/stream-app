@@ -1,15 +1,20 @@
-import './movie.scss';
+import './movie-player.scss';
 import { VideoPlayer } from '../../../../components/specific/player/VideoPlayer';
+import * as React from 'react';
 import { useRef } from 'react';
 import videojs from 'video.js';
 import { APIS } from '../../../../../infrastructure/state/config';
 import { useSetAtom } from '../../../../../infrastructure/state/jotai';
-import { isTopMenuOpen } from '../../../../../infrastructure/state/menu';
-import '../../../../components/generic/spatial-navigation/spatial_navigation';
+import { Movie } from '../../../../../domain/movie/movies/Movie';
+import { isMoviePaused, movieVideoPlayer } from '../../../../../infrastructure/state/movie';
 
-export default function PlayingDetails() {
+interface PlayingDetailsProps {
+  readonly movie: Movie | null | undefined;
+}
+export default function MoviePlayer({ movie }: PlayingDetailsProps) {
   const playerRef = useRef<any>(null);
-  const setIsMenuOpen = useSetAtom(isTopMenuOpen);
+  const setMovieVideoPlayer = useSetAtom(movieVideoPlayer);
+  const setIsMoviePaused = useSetAtom(isMoviePaused);
 
   const videoJsOptions = {
     autoplay: true,
@@ -22,7 +27,7 @@ export default function PlayingDetails() {
     },
     sources: [
       {
-        src: APIS.API_URL + `/api/v1/movies/${'rick.mkv'}`,
+        src: APIS.API_URL + movie?.movieLink,
         type: 'video/mp4',
       },
     ],
@@ -30,6 +35,7 @@ export default function PlayingDetails() {
 
   const handlePlayerReady = (player: any) => {
     playerRef.current = player;
+    setMovieVideoPlayer(player);
 
     player.tech_.off('dblclick');
 
@@ -39,12 +45,14 @@ export default function PlayingDetails() {
     });
 
     player.on('pause', () => {
-      setIsMenuOpen(true);
+      setIsMoviePaused(true);
+      // setIsMenuOpen(true);
       videojs.log('player is paused');
     });
 
     player.on('play', () => {
-      setIsMenuOpen(false);
+      // setIsMenuOpen(false);
+      setIsMoviePaused(false);
       videojs.log('player is playing');
     });
 
@@ -55,12 +63,9 @@ export default function PlayingDetails() {
     //   videojs.log('player will dispose');
     // });
   };
-
   return (
     <div className='playing-details'>
-      <div className='playing-details__content'>
-        <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
-      </div>
+      <div className='playing-details__content'>{movie && <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />}</div>
     </div>
   );
 }

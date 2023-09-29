@@ -4,6 +4,25 @@
     display: flex;
     flex-direction: column;
     padding: 2rem;
+    z-index: 3;
+    transition: all 0.7s ease-in-out;
+
+    &__playing {
+      z-index: -1;
+    }
+
+    &__paused {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 0;
+      height: 100vh;
+      background-color: black;
+      background-size: 700px 1000px;
+    }
+
+
     &__scrolling-rows {
       overflow-y: auto;
       overflow-x: hidden;
@@ -11,30 +30,78 @@
       flex-grow: 1;
     }
 
+    &__scrolling-rows::-webkit-scrollbar {
+      display: none;
+    }
+
     &__selected-item {
-      height: 40rem;
+      height: 40%;
       width: 100%;
       display: flex;
-      flex-flow: row wrap;
+      flex-flow: row nowrap;
       align-items: flex-start;
       justify-content: center;
       background-color: black;
       margin-bottom: 37px;
       border-radius: 7px;
       background-repeat: no-repeat;
-      background-size: 40% ;
-      background-position: 0 20%;
-      &__poster {
-        height: 40rem;
+      background-size: 300px 450px;
+      //background-position: -1000px 20%;
+      &__paused {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        background-size: 700px 1000px;
       }
-      &__title {
-        padding-top: 5rem;
-        padding-left: 20rem;
-        padding-right: 20rem;
-        color: white;
-        font-size: 6rem;
-        font-weight: 400;
+      &__playing {
+        transition: all 0.4s ease-in-out;
+        position: absolute;
+        background-color: black;
+        top: 0;
+        left: 0;
+        height: 100%;
       }
 
+      &__title {
+        width: 100%;
+        height: 100%;
+        margin: 5rem;
+        align-self: flex-start;
+        display: inline-block;
+        color: white;
+        font-size: 3rem;
+        font-weight: 400;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+      }
+
+    &__close {
+      position: absolute;
+      width: 3rem;
+      top:0;
+      right: 0;
+      margin: 2rem;
+      align-self: flex-end;
+      fill: white;
+    }
+
+      &__play {
+        display: flex;
+        justify-content: flex-end;
+        margin: 2rem;
+        align-self: flex-end;
+        &__button {
+
+          &__icon {
+            width: 3.5rem;
+            align-self: flex-end;
+            fill: white;
+          }
+        }
+      }
     }
   }

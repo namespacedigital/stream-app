@@ -5,17 +5,19 @@
     margin-bottom: 22px;
     font-size: 27px;
     font-weight: 700;
-    padding-left: 60px;
+
   }
   &__scrolling {
     overflow-x: auto;
     overflow-y: hidden;
     flex-shrink: 1;
     flex-grow: 1;
-    padding-left: 60px;
     &__content {
       display: flex;
       flex-direction: row;
     }
+  }
+  &__scrolling::-webkit-scrollbar {
+    display: none;
   }
 }

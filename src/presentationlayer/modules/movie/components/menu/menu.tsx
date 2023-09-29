@@ -4,6 +4,8 @@ import { FocusContext, init, useFocusable } from '@noriginmedia/norigin-spatial-
 import { MenuItem } from './menu-item';
 import classNames from 'classnames';
 import './menu.scss';
+import { useAtomValue } from '../../../../../infrastructure/state/jotai';
+import { isMovieOpened } from '../../../../../infrastructure/state/movie';
 
 init({
   debug: false,
@@ -17,6 +19,7 @@ interface MenuProps {
 
 export function Menu({ focusKey: focusKeyParam, items }: MenuProps) {
   const [nav, setNav] = useState('');
+  const isMoviePausedState = useAtomValue(isMovieOpened);
   const {
     ref,
     focusSelf,
@@ -50,7 +53,14 @@ export function Menu({ focusKey: focusKeyParam, items }: MenuProps) {
 
   return (
     <FocusContext.Provider value={focusKey}>
-      <div className={classNames(['movie-menu', { 'movie-menu__has-focus-child': hasFocusedChild }])} ref={ref}>
+      <div
+        className={classNames([
+          'movie-menu',
+          { 'movie-menu__has-focus-child': hasFocusedChild },
+          { 'movie-menu__playing': isMoviePausedState },
+        ])}
+        ref={ref}
+      >
         <h1>Logo</h1>
         <ul>
           {items.map((item) => (

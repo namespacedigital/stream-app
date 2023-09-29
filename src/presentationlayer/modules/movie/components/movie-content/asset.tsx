@@ -23,21 +23,19 @@ export function Asset({ movie, onEnterPress, onFocus }: AssetProps) {
   const { ref, focused } = useFocusable({
     onEnterPress,
     onFocus,
-    focusKey: movie.title,
-    extraProps: {
-      title: movie.title,
-      posterLink: movie.posterLink,
-    },
+    focusKey: movie.id,
+    extraProps: movie,
   });
 
   const handleMenu = (item: string) => {
     setFocus(item);
+    onEnterPress(movie, { pressedKeys: {} });
   };
 
   return (
-    <FocusContext.Provider value={movie.title}>
+    <FocusContext.Provider value={movie.id}>
       <div className='asset' ref={ref} data-testid='asset'>
-        <button type='button' onClick={() => handleMenu(movie.title)}>
+        <button type='button' onClick={() => handleMenu(movie.id)}>
           {movie.posterLink !== 'N/A' && (
             <img
               className={classNames(['asset__box', { asset__box__focused: focused }])}
@@ -46,10 +44,11 @@ export function Asset({ movie, onEnterPress, onFocus }: AssetProps) {
             />
           )}
           {movie.posterLink === 'N/A' && (
-            <FilmIcon className={classNames(['asset__box', { asset__box__focused: focused }])} data-testid='asset-box' />
+            <div className={classNames(['asset__box asset__box__film-icon', { asset__box__focused: focused }])}>
+              <FilmIcon data-testid='asset-box' />
+              <span className='asset__title'>{movie.title}</span>
+            </div>
           )}
-
-          <span className='asset__title'>{movie.title}</span>
         </button>
       </div>
     </FocusContext.Provider>

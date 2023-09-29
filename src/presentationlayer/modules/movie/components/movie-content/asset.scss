@@ -2,23 +2,30 @@
   margin-right: 22px;
   display: flex;
   flex-direction: column;
-  &__title {
-    color: white;
-    margin-top: 10px;
-    font-size: 24px;
-    font-weight: 400;
-  }
+
   &__box {
-    height: 30rem;
-    width: 20rem;
-    padding: 2rem;
+    height: 20rem;
     fill: white;
-    //background-color: ${({ color }) => color};
     border-color: white;
     border-style: solid;
     border-width: 0;
     box-sizing: border-box;
     border-radius: 7px;
+
+    &__film-icon {
+      color: white;
+      font-size: 20px;
+      font-weight: 400;
+      width: 13rem;
+      padding: 1rem;
+      border-color: white;
+      border-style: solid;
+      overflow: hidden;
+      //white-space: nowrap;
+      text-overflow: ellipsis;
+      //display: block; or...
+      display: inline-block;
+    }
     &__focused {
       border-width: 0.5rem;
     }

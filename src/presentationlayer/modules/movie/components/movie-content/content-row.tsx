@@ -42,7 +42,7 @@ export function ContentRow({ title: rowTitle, assets, onAssetPress, onFocus }: C
         <div className='content-row__scrolling' ref={scrollingRef}>
           <div className='content-row__scrolling__content'>
             {assets.map((movie) => (
-              <Asset key={movie.title} movie={movie} onEnterPress={onAssetPress} onFocus={onAssetFocus} />
+              <Asset key={movie.id} movie={movie} onEnterPress={onAssetPress} onFocus={onAssetFocus} />
             ))}
           </div>
         </div>
