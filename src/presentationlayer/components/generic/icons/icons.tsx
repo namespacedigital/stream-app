@@ -11,3 +11,5 @@ export { ReactComponent as FilmIcon } from './../../../assets/icons/film.svg';
 export { ReactComponent as TvIcon } from './../../../assets/icons/tv-retro.svg';
 export { ReactComponent as CloseIcon } from './../../../assets/icons/xmark.svg';
 export { ReactComponent as PlayIcon } from './../../../assets/icons/play.svg';
+export { ReactComponent as NavigateLeft } from './../../../assets/icons/chevron-left.svg';
+export { ReactComponent as NavigateRight } from './../../../assets/icons/chevron-right.svg';

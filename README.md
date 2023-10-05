@@ -58,3 +58,6 @@ https://codesandbox.io/s/react-hooks-navigate-list-with-keyboard-eowzo
 
 #norigin media spatial navigation docs:
 https://github.com/NoriginMedia/react-spatial-navigation/blob/master/README.md
+
+
+iconv -f ISO-8859-2 -t UTF-8 Ghosted.2023.2160p.ATVP.WEB-DL.DDP5.1.Atmos.HDR.DV.HEVC-CMRG.srt > Ghosted.2023.2160p.ATVP.WEB-DL.DDP5.1.Atmos.HDR.DV.HEVC-CMRG1.sr

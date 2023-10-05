@@ -5,7 +5,7 @@ import { ContentRow } from './content-row';
 import './content.scss';
 import { Movie } from '../../../../../domain/movie/movies/Movie';
 import { APIS } from '../../../../../infrastructure/state/config';
-import { CloseIcon, PlayIcon } from '../../../../components/generic/icons/icons';
+import { CloseIcon, NavigateLeft, NavigateRight, PlayIcon } from '../../../../components/generic/icons/icons';
 import classNames from 'classnames';
 import { useAtom, useAtomValue } from '../../../../../infrastructure/state/jotai';
 import { isMovieOpened, isMoviePaused, movieVideoPlayer } from '../../../../../infrastructure/state/movie';
@@ -105,12 +105,16 @@ export function Content({ rows, focusKey: focusKeyParam, handleSelectMovie }: Co
             )}
           </div>
         )}
-        <div className='content__scrolling-rows' ref={ref}>
-          <div>
-            {rows.map(({ title, assets }) => (
-              <ContentRow assets={assets} key={title} title={title} onAssetPress={onAssetPress} onFocus={onRowFocus} />
-            ))}
+        <div className='content__navigate'>
+          <NavigateLeft className='content__navigate__arrow' />
+          <div className='content__scrolling-rows' ref={ref}>
+            <div>
+              {rows.map(({ title, assets }) => (
+                <ContentRow assets={assets} key={title} title={title} onAssetPress={onAssetPress} onFocus={onRowFocus} />
+              ))}
+            </div>
           </div>
+          <NavigateRight className='content__navigate__arrow' />
         </div>
       </div>
     </FocusContext.Provider>

@@ -7,6 +7,17 @@
     z-index: 3;
     transition: all 0.7s ease-in-out;
 
+    &__navigate {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &__arrow {
+        height: 5rem;
+        fill:white;
+        align-self: center;
+      }
+    }
+
     &__playing {
       z-index: -1;
     }

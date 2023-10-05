@@ -1,19 +1,20 @@
 import './movie-player.scss';
 import { VideoPlayer } from '../../../../components/specific/player/VideoPlayer';
 import * as React from 'react';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import videojs from 'video.js';
 import { APIS } from '../../../../../infrastructure/state/config';
-import { useSetAtom } from '../../../../../infrastructure/state/jotai';
+import { useAtom, useSetAtom } from '../../../../../infrastructure/state/jotai';
 import { Movie } from '../../../../../domain/movie/movies/Movie';
 import { isMoviePaused, movieVideoPlayer } from '../../../../../infrastructure/state/movie';
+import { useSubtitleHook } from '../subtitle/subtitle.hook';
 
 interface PlayingDetailsProps {
   readonly movie: Movie | null | undefined;
 }
 export default function MoviePlayer({ movie }: PlayingDetailsProps) {
   const playerRef = useRef<any>(null);
-  const setMovieVideoPlayer = useSetAtom(movieVideoPlayer);
+  const [movieVideoPlayerState, setMovieVideoPlayer] = useAtom(movieVideoPlayer);
   const setIsMoviePaused = useSetAtom(isMoviePaused);
 
   const videoJsOptions = {
@@ -21,6 +22,7 @@ export default function MoviePlayer({ movie }: PlayingDetailsProps) {
     controls: true,
     responsive: true,
     fluid: true,
+    // aspectRatio: '16:9',
     controlBar: {
       fullscreenToggle: false,
       pictureInPictureToggle: false,
@@ -32,6 +34,17 @@ export default function MoviePlayer({ movie }: PlayingDetailsProps) {
       },
     ],
   };
+
+  const { subtitle } = useSubtitleHook({ movie });
+
+  useEffect(() => {
+    if (movieVideoPlayerState && movieVideoPlayerState.player_ && subtitle && movie) {
+      const trackEl = movieVideoPlayerState.addRemoteTextTrack({ src: subtitle, label: 'ro', srclang: 'ro', default: 'ro' }, false);
+      trackEl.addEventListener('load', function () {
+        // your callback goes here
+      });
+    }
+  }, [subtitle, movie, movieVideoPlayerState]);
 
   const handlePlayerReady = (player: any) => {
     playerRef.current = player;
@@ -55,6 +68,8 @@ export default function MoviePlayer({ movie }: PlayingDetailsProps) {
       setIsMoviePaused(false);
       videojs.log('player is playing');
     });
+
+    player.bigPlayButton.hide();
 
     // player.on('play', () => {
     //   setTimeout(() => {
