@@ -13,6 +13,7 @@ import { Sidebar } from '../../components/generic/sidebar/sidebar';
 import { selectedTvProgram } from '../../../infrastructure/state/iptv';
 import { ExcludedPrograms } from '../../../domain/iptv/tv-program/excluded-programs';
 
+const TIME_TO_UPDATE = 600;
 type Error = {
   readonly status?: number;
   readonly message: string;
@@ -22,6 +23,8 @@ export default function IptvPage() {
   const [selectedTvProgramState, setSelectedTvProgramState] = useAtom(selectedTvProgram);
   const [error, setError] = useState<Error | null>(null);
   const { tvProgram, setTvPrograms, enable, disable, tvPrograms } = useChangeTvProgramHook({});
+  const timer = useRef<null | any>(null);
+  const [delay, setDelay] = React.useState(false);
 
   const handlePlayerReady = (player: any) => {
     playerRef.current = player;
@@ -80,7 +83,22 @@ export default function IptvPage() {
 
   useEffect(() => {
     if (tvProgram && tvProgram.programName !== '') {
+      timer.current = setTimeout(() => {
+        setDelay(true);
+      }, TIME_TO_UPDATE);
+    }
+    return () => {
+      if (timer.current) {
+        clearTimeout(timer.current);
+        timer.current = null;
+      }
+    };
+  }, [setSelectedTvProgramState, tvProgram]);
+
+  useEffect(() => {
+    if (tvProgram && tvProgram.programName !== '') {
       setSelectedTvProgramState(tvProgram);
+      setDelay(false);
     }
   }, [setSelectedTvProgramState, tvProgram]);
 
@@ -109,7 +127,7 @@ export default function IptvPage() {
               {error.message} {error.status}
             </span>
           )}
-          {error === null && selectedTvProgramState && selectedTvProgramState.programName && (
+          {delay && error === null && selectedTvProgramState && selectedTvProgramState.programName && (
             <VideoPlayer
               options={{
                 autoplay: true,
