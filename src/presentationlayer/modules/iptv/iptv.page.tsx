@@ -13,7 +13,7 @@ import { Sidebar } from '../../components/generic/sidebar/sidebar';
 import { selectedTvProgram } from '../../../infrastructure/state/iptv';
 import { ExcludedPrograms } from '../../../domain/iptv/tv-program/excluded-programs';
 
-const TIME_TO_UPDATE = 600;
+const TIME_TO_UPDATE = 500;
 type Error = {
   readonly status?: number;
   readonly message: string;

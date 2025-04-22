@@ -5,15 +5,11 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Boundary from './presentationlayer/components/specific/error-boundary/ErrorBoundary';
 import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
-  <React.StrictMode>
-      <ErrorBoundary FallbackComponent={Boundary}>
-          <App />
-      </ErrorBoundary>
-  </React.StrictMode>
+  <ErrorBoundary FallbackComponent={Boundary}>
+    <App />
+  </ErrorBoundary>,
 );
 
 // If you want to start measuring performance in your app, pass a function
